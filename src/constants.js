@@ -1,9 +1,9 @@
 export const scaleFactor = 4;
 export const dialogueData = {
-  pc: `Welcome to my PC—my hub for all things tech (and occasionally trying to game when life allows). Here, I solve networking problems, code, and build with frameworks like Next.js, React, and Node.js to create efficient, user-friendly systems.
-  When I’m not diving into web development, self-hosting projects, or sneaking in some gaming, I’m optimizing workflows and exploring new ways to make technology work better. Curious about my work? Check out my <a href="https://github.com/rgrover00" target="_blank">GitHub</a>!`,
+  pc: `Welcome to my PC—my hub for all things tech (and occasionally trying to game when life allows). Here, I solve networking problems, pretend to code, and work on self-hosted projects.
+  Curious about my work? Check out my <a href="https://github.com/rgrover00" target="_blank">GitHub</a>!`,
 
-  "cs-degree": "Alongside my CIT Networking Degree, my wall features certifications that highlight my expertise in networking, cloud computing, and IT management, including Extreme Networks, Google Workspace, and AWS Cloud Practitioner. Each reflects my dedication to growth and staying at the forefront of technology. Explore all my certifications on my <a href=\"https://www.credly.com/users/ronniegrover\" target=\"_blank\">Credly profile</a>! ",
+  "cs-degree": "Alongside my CIT Networking Degree, my wall features certifications that highlight my expertise in networking, cloud computing, and IT management, including in Extreme Networks, Google , and AWS. Each reflects my dedication to growth and staying at the forefront of technology. Explore all my certifications on my <a href=\"https://www.credly.com/users/ronniegrover\" target=\"_blank\">Credly profile</a>! ",
 
   "sofa-table": "This is my sofa, where I pretend to relax while spending time with my wife, Stinabean, and keeping up with our three little adventurers—Ayla (4), Bryson (2), and baby Everly. It’s also where I brainstorm self-hosted web projects or unwind after a garage gym workout. Curious about my work? Check out <a href=\"https://ronniegrover.com\" target=\"_blank\">my personal website</a>!  ",
 
