@@ -4,125 +4,222 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Grover's 2D Portfolio</title>
+    <title>Grover’s 2D Tech Adventure</title>
+    <meta name="description" content="Explore Ronnie Grover’s interactive, Pokémon-style portfolio built with Kaboom.js." />
   </head>
   <body>
+    <!-- Global styles (inline for simplicity) -->
+    <style>
+      @font-face {
+        font-family: rubik;
+        src: url(rubik.ttf);
+        font-display: swap;
+      }
 
+      :root {
+        --note-bg: rgba(0,0,0,0.6);
+        --note-text: #f0f0f0;
+        --note-accent: #ffcc00;
+      }
 
-    <!-- Global styles - move to ext src if needed -->
-<style>
-  @font-face {
-    font-family: sans-serif;
-    src: url(rubik.ttf);
-  }
+      html, body {
+        height: 100%;
+      }
 
-  body {
-    font-family: rubik, sans-serif;
-    font-size: 2rem;
-    overflow: hidden;
-  }
+      body {
+        margin: 0;
+        font-family: rubik, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif;
+        font-size: 2rem;
+        overflow: hidden; /* keep the canvas snug */
+        background: #0f0f12; /* nice fallback behind canvas */
+        color: #111;
+      }
 
-  #app {
-    width: 100%;
-    height: 100%;
-    position: relative;
-  }
+      #app {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        isolation: isolate; /* keep z-index layers clean */
+      }
 
-  #textbox {
-    position: absolute;
-    left: 10%;
-    right: 10%;
-    bottom: 2vh;
-    min-height: 10vh;
-    background: whitesmoke;
-    border-radius: 2px;
-    outline-style: solid;
-    padding: 1rem;
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    align-items: flex-start;
-    word-spacing: 0.2rem;
-    filter: drop-shadow(0 0 0.69rem rgb(112, 112, 112));
-  }
+      /* Dialogue/textbox */
+      #textbox {
+        position: absolute;
+        left: 10%;
+        right: 10%;
+        bottom: 2vh;
+        min-height: 10vh;
+        background: whitesmoke;
+        border-radius: 8px;
+        outline: 2px solid #111;
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        align-items: flex-start;
+        word-spacing: 0.2rem;
+        box-shadow: 0 0 0.69rem rgba(112, 112, 112, 0.6);
+        z-index: 5;
+      }
 
-  .ui-text {
-    margin: 0;
-    user-select: none;
-    font-size: 1rem;
-  }
+      .ui-text {
+        margin: 0;
+        user-select: none;
+        font-size: 1rem;
+        color: #111;
+      }
 
-  .ui-close-btn {
-    font-family: rubik, sans-serif;
-    border-style: none;
-    border-radius: 3px;
-    padding: 1rem;
-    font-size: inherit;
-  }
+      .ui-close-button,
+      .ui-close-btn {
+        font-family: rubik, sans-serif;
+        border: none;
+        border-radius: 6px;
+        padding: 0.6rem 1rem;
+        font-size: 1rem;
+        background: #111;
+        color: #fff;
+        cursor: pointer;
+      }
 
-  .btn-container {
-    align-self: flex-end;
-    margin-top: 1rem;
-  }
+      .btn-container {
+        align-self: flex-end;
+        margin-top: 1rem;
+      }
 
-  /* Updated note style */
-.note {
-  font-size: 1.1rem;
-  position: absolute;
-  left: 5%;
-  top: 2vh;
-  max-width: 80%;
-  padding: 0.75rem 1rem;
-  background: rgba(0, 0, 0, 0.6);
-  border-radius: 8px;
-  color: #f0f0f0;
-  line-height: 1.6;
-  z-index: 10;
-  pointer-events: none;
-  filter: drop-shadow(0 0 0.5rem rgba(0,0,0,0.5));
-  font-family: "rubik", sans-serif;
-}
+      /* NOTE: Floating tutorial box */
+      .note {
+        position: absolute;
+        left: 5%;
+        top: 2vh;
+        max-width: 86%;
+        padding: 0.75rem 1rem;
+        background: var(--note-bg);
+        border-radius: 10px;
+        color: var(--note-text);
+        line-height: 1.6;
+        z-index: 10;             /* above the canvas */
+        pointer-events: none;    /* clicks pass through to canvas */
+        box-shadow: 0 0 0.5rem rgba(0,0,0,0.5);
+        font-size: 1.1rem;
+      }
 
-.note ul {
-  list-style: none;        /* remove default bullets */
-  padding: 0;
-  margin: 0;
-}
+      .note ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
 
-.note li {
-  margin: 0.25rem 0;       /* spacing between lines */
-  display: flex;
-  align-items: center;
-}
+      .note li {
+        margin: 0.25rem 0;
+        display: flex;
+        align-items: flex-start;
+        opacity: 0;             /* hidden until revealed by typewriter */
+        transform: translateY(4px);
+      }
 
-.note li::before {
-  content: "▶";            /* like Pokémon dialogue arrow */
-  margin-right: 0.5rem;
-  color: #ffcc00;           /* gold arrow */
-}
+      .note li::before {
+        content: "▶";
+        margin-right: 0.5rem;
+        color: var(--note-accent);
+        flex: 0 0 auto;
+        line-height: 1.1;
+        margin-top: 0.1rem;
+      }
 
-</style>
+      /* Reveal animation */
+      @keyframes revealLine {
+        from { opacity: 0; transform: translateY(4px); }
+        to   { opacity: 1; transform: translateY(0); }
+      }
 
+      /* Reduced motion: show all lines immediately */
+      @media (prefers-reduced-motion: reduce) {
+        .note li {
+          opacity: 1 !important;
+          transform: none !important;
+          animation: none !important;
+        }
+      }
 
-      <div id="app">
-        <div>
-          <p class="note">
-                          👋 Good Morning Ivy Brook Academy! You can tap or click the screen to walk around. 
-                          ✨ Try interacting with things you see—like my computer, books, or TV!
-                          🙂 Have fun on the adventure!
-          </p>
-          <div id="textbox-container" style="display:none">
-            <div id = "textbox">
-              <p id ="dialogue" class="ui-text"></p>
-              <div class="btn-container">
-                <button id="close" class="ui-close-button">Close</button>
-              </div> 
-            </div>
+      /* Canvas */
+      #game {
+        position: relative;
+        z-index: 0;
+        display: block;
+      }
+
+      /* Small screens: tighten the note */
+      @media (max-width: 640px) {
+        .note {
+          left: 4%;
+          top: 1.5vh;
+          max-width: 92%;
+          font-size: 1rem;
+          padding: 0.6rem 0.8rem;
+        }
+      }
+    </style>
+
+    <div id="app" role="application" aria-label="Grover’s interactive portfolio">
+      <!-- Friendly tutorial note -->
+      <div class="note" aria-live="polite">
+        <ul id="note-list">
+          <li>👋 Good morning, Ivy Brook Academy! Tap or click the screen to walk.</li>
+          <li>✨ Try the computer, bookshelf, TV, and more — they tell stories!</li>
+          <li>🙂 Have fun on the adventure!</li>
+        </ul>
+      </div>
+
+      <!-- Game dialogue UI (hidden by default; shown by your game code) -->
+      <div id="textbox-container" style="display:none">
+        <div id="textbox" aria-live="polite">
+          <p id="dialogue" class="ui-text"></p>
+          <div class="btn-container">
+            <button id="close" class="ui-close-button" aria-label="Close dialogue">Close</button>
           </div>
         </div>
-        <canvas id="game"></canvas>
       </div>
+
+      <!-- Kaboom canvas -->
+      <canvas id="game"></canvas>
+    </div>
+
+    <!-- Typewriter reveal for the note lines -->
+    <script>
+      (function () {
+        const list = document.getElementById('note-list');
+        if (!list) return;
+
+        const lines = Array.from(list.querySelectorAll('li'));
+        const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        if (prefersReduced) {
+          // Show all immediately
+          lines.forEach(li => {
+            li.style.opacity = '1';
+            li.style.transform = 'none';
+          });
+          return;
+        }
+
+        // Reveal each line in sequence
+        const baseDelay = 200;   // initial pause before first line
+        const stepDelay = 900;   // delay between lines
+        lines.forEach((li, i) => {
+          const delay = baseDelay + i * stepDelay;
+          li.style.animation = `revealLine 320ms ease-out ${delay}ms forwards`;
+        });
+
+        // Optional: hide the note after some time (uncomment if desired)
+        // setTimeout(() => {
+        //   const note = document.querySelector('.note');
+        //   if (note) note.style.display = 'none';
+        // }, 12000);
+      })();
+    </script>
+
+    <!-- Your game code -->
     <script type="module" src="src/main.js"></script>
   </body>
 </html>
