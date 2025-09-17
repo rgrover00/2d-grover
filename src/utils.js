@@ -1,6 +1,7 @@
 export function displayDialogue(text, onDisplayEnd) {
   const dialogueUI = document.getElementById("textbox-container");
   const diaglogue = document.getElementById("dialogue");
+  const closeBtn = document.getElementById("close");
 
   dialogueUI.style.display = "block";
 
@@ -11,36 +12,48 @@ export function displayDialogue(text, onDisplayEnd) {
       currentText += text[index];
       diaglogue.innerHTML = currentText;
       index++;
-    return;
+      return;
     }
-
     clearInterval(intervalRef);
   }, 1);
 
-  const closeBtn = document.getElementById("close");
+  let closed = false;       // prevent double-calls
+  let armed = false;        // ignore the click that opened the menu
 
-  function onCloseBtnClick() {
-    onDisplayEnd();
+  function closeDialogue() {
+    if (closed) return;
+    closed = true;
+
+    onDisplayEnd?.();
     dialogueUI.style.display = "none";
     diaglogue.innerHTML = "";
     clearInterval(intervalRef);
-    closeBtn.removeEventListener("click", onCloseBtnClick);
+
+    // Cleanup listeners
+    closeBtn.removeEventListener("click", closeDialogue);
+    document.removeEventListener("click", onDocClick, true);
+    window.removeEventListener("keypress", onKeypress);
   }
 
-  closeBtn.addEventListener("click", onCloseBtnClick);
-
-  addEventListener("keypress", (key) => {
-    if (key.code === "Enter") {
-      closeBtn.click();
-    }
-  });
-}
- 
-export function setCamScale(k) {
-  const resizeFactor = k.width() / k.height();
-  if (resizeFactor < 1) {
-    k.camScale(k.vec2(1));
-  } else {
-    k.camScale(k.vec2(1.5));
+  function onDocClick() {
+    if (!armed) return;     // first click after open is ignored
+    closeDialogue();
   }
+
+  function onKeypress(e) {
+    if (e.code === "Enter") closeDialogue();
+  }
+
+  // Click the X still works
+  closeBtn.addEventListener("click", closeDialogue);
+
+  // Arm the global click after a tick so the opening click doesn't close it
+  setTimeout(() => {
+    armed = true;
+    // use capture to catch clicks even if something stops propagation
+    document.addEventListener("click", onDocClick, true);
+  }, 50);
+
+  // Enter key still closes
+  window.addEventListener("keypress", onKeypress);
 }
