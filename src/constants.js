@@ -1,30 +1,31 @@
 export const scaleFactor = 4;
 export const dialogueData = {
-  "pc":
-   "This is my big computer! It’s like my toolbox. I use it to fix problems with the internet, play with numbers, and sometimes play games when I have time. Imagine it like a magic coloring book—you tell it what you want, and it makes things happen on the screen! Just like you use crayons to draw, I use the keyboard to ‘draw’ computer puzzles. Computers help people talk to each other, learn, and play.",
 
-  "cs-degree":
-  "On my wall, I have lots of special awards—kind of like gold stars or superhero badges. They show I worked really hard to learn about computers, the internet, and even how to keep people safe online. Instead of learning just ABCs and 123s, I learned about things like clouds (the kind on computers, not the sky!) and big networks that help phones and TVs talk to each other.",
+"pc":  
+"This is my big computer! It’s like my toolbox. I use it to fix the internet and make cool things on the screen. You know how you use crayons to draw pictures? I use my keyboard to draw computer puzzles. Sometimes I even play games when I have extra time!",  
 
-  "sofa-table":
-  "This is my comfy couch! I sit here with my wife, Miss Stinabean, and our three silly kids—Ayla who is 4 (just like some of you!), Bryson who is 2, and baby Everly. We watch cartoons, laugh, and sometimes I think of new computer ideas while sitting here. It’s kind of like a family charging station—we all relax and power back up together.",
+"cs-degree":  
+"On my wall, I have special awards—like shiny gold stars! They show I worked really hard to learn about computers and the internet. I even learned about computer ‘clouds’—not the fluffy ones in the sky, but the kind that help phones, TVs, and iPads talk to each other.",  
 
-  "tv":
-  "This is our TV. But guess what? It’s not just for cartoons! It teaches letters, numbers, songs, and even fun science things like volcanoes. Sometimes, when it’s not busy teaching you kids, I use it to learn new things for my computer job by watching other smart people on YouTube. But let’s be honest—the kids usually pick the shows!",
+"sofa-table":  
+"This is my cozy couch! I sit here with Miss Stinabean and our three silly kids—Ayla (she’s 4, just like some of you!), Bryson (he’s 2), and baby Everly. We watch cartoons, laugh, and rest together. It’s like our family charging station—where we all power up with hugs!",  
 
-  "bed":
-  "This is my resting spot. I try to sit here quietly, maybe read or think about new ideas for my computer projects. But with three kids, it usually turns into a tickle fight or a pillow mountain! Still, it reminds me that even grown-ups need quiet time… even if it doesn’t last very long!",
+"tv":  
+"This is our TV. It’s not just for cartoons—it teaches letters, numbers, songs, and even fun science like volcanoes! Sometimes I use it to learn new computer tricks. But most of the time, guess what? The kids pick the shows!",  
 
-  "resume":
-  "This is my desk, and on it is my big paper that tells people all about me—kind of like a giant grown-up show-and-tell. It says, ‘Here are the things I’m good at, here are the tools I can use, and here are the jobs I’ve done.’ When I want a new project or job, I show it to people so they know I can help. It’s like giving someone your best artwork to hang on the fridge!",
+"bed":  
+"This is where I try to rest. Sometimes I read or think of new computer ideas. But with three kids, it usually turns into a tickle fight or a pillow mountain! Even grown-ups need quiet time… even if it doesn’t last long!",  
 
-  "projects": 
-  "This whole adventure you’re seeing is actually a game I made! I built it using something called Kaboom—it’s like a box of digital Legos for games. I tell the computer how the game should look, what the characters should do, and it brings it to life. Just like you build towers with blocks, I build computer worlds with code!",
+"resume":  
+"This is my desk. On it, I have a big paper about me—it’s like a grown-up show-and-tell! It shows what I can do, what tools I use, and the jobs I’ve done. When I want to work on new projects, I share it so people know I can help—like hanging artwork on the fridge!",  
 
-  "library":
-  "These are some of my books. They’re full of computer secrets and puzzles. Some are about how the internet works, some are about how to make websites, and some are about keeping computers safe. I don’t get to read them all because we’re busy playing, but they remind me that learning never stops—no matter how old you are!",
+"projects":  
+"This adventure you’re playing is a game I made! I built it using something called Kaboom—it’s like a box of digital Legos. I tell the computer how to build the world, and it brings it to life. Just like you stack blocks to make a tower, I stack code to make a game!",  
 
-  exit: "look for what you can't see",
+"library":  
+"These are my books. They’re full of computer puzzles and secrets! Some teach me how the internet works, some how to make websites, and some how to keep computers safe. I don’t read them all because I’m busy playing, but they remind me learning never stops!",  
+
+"exit":  
+"Look for what you can't see... Sometimes the best things are the ones you can’t see—like Wi-Fi! Almost like magic.",  
   
 };
-
