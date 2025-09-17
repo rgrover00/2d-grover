@@ -1,50 +1,43 @@
-## 2D JavaScript Portfolio Documentation
+# 🎮 2D Grover Journey
 
-#### first create a local directory
-mkdir rg-portfolio-2d
+Welcome to **2D Grover Journey** – my interactive portfolio built like a video game!
 
-#### initialize a new vite project
-cd rg-portfolio-2d && 
-npm create vite@latest . 
- select vanilla > javascript 
+Instead of just reading a boring list of projects, you get to **walk around, click things, and explore my world**. Think of it like Pokémon meets a digital résumé.
 
-#### install kaboom module
-npm install kaboom
+---
 
-#### delete unnecessary files for this project
-rm -rf main.js, style.css, /public/vite.svg, counter.js
+This is a website where you:
 
-### create vite file for updated frameworks
-create a new file called `vite.config.js
-  // vite.config.js
-import { defineConfig } from 'vite'
-import { resolve } from 'path'
+* 👆 Tap or click the screen to move around.
+* 💬 Talk to objects (like my computer, books, or TV) to learn about me.
+* ❌ After reading a menu, click **Close** to keep exploring.
+* 🎉 Have fun while learning what I do as a Network Engineer and Developer!
 
-export default defineConfig({
-  base: '/rg-portfolio-2d/',
-  resolve: {
-    alias: {
-      '@': resolve(__dirname, 'src'),
-    },
-  },
-})
+---
 
-#### create more files 
- create a new file called `main.js` in /src directory && update main.js to /src directory, 
- insert <style></style> <div></div> into index.html 
- create kaboomCtx.js in /src directory && import kaboom from "kaboom" with const k
- create constants.js 
- utils.js - makes everything cleaner
+## 🛠 Built With
 
-#### assests will be stored in public directory
-  font type
-  spritesheet
- also setup tile for game maping design, pretty neat. need to dive more into it
+* [Kaboom.js](https://kaboomjs.com/) – game engine for the 2D world
+* HTML / CSS – makes the text and style look nice
+* JavaScript – makes the world come alive
 
-#### code to main.js 
-  
+---
 
+## 📸 Screenshots
 
+*(Add screenshots of the welcome screen, walking character, and interaction popups here)*
 
+---
 
+## 🌐 Live Demo
+
+👉 Play it here: [2d-grover.pages.dev](https://2d-grover.pages.dev/)
+
+---
+
+## 📬 Contact
+
+* Website: [ronniegrover.com](https://ronniegrover.com)
+* Certifications: [Credly](https://www.credly.com/users/ronniegrover)
+* GitHub: [@rgrover00](https://github.com/rgrover00)
 
