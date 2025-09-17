@@ -23,11 +23,6 @@ This is a website where you:
 
 ---
 
-## 📸 Screenshots
-
-*(Add screenshots of the welcome screen, walking character, and interaction popups here)*
-
----
 
 ## 🌐 Live Demo
 
