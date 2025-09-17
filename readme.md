@@ -40,4 +40,3 @@ This is a website where you:
 * Website: [ronniegrover.com](https://ronniegrover.com)
 * Certifications: [Credly](https://www.credly.com/users/ronniegrover)
 * GitHub: [@rgrover00](https://github.com/rgrover00)
-
