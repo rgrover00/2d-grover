@@ -67,22 +67,41 @@
   }
 
   /* Updated note style */
-  .note {
-    font-size: 1.1rem;
-    position: absolute;
-    left: 5%;
-    top: 2vh;
-    max-width: 80%;
-    padding: 0.75rem 1rem;
-    background: rgba(0, 0, 0, 0.6);   /* translucent box */
-    border-radius: 8px;               /* rounded corners */
-    color: #f0f0f0;                   /* light text */
-    line-height: 1.4;
-    z-index: 10;                      /* stays above canvas */
-    pointer-events: none;             /* doesn’t block clicks */
-    filter: drop-shadow(0 0 0.5rem rgba(0,0,0,0.5)); 
-    font-family: "rubik", sans-serif;
-  }
+.note {
+  font-size: 1.1rem;
+  position: absolute;
+  left: 5%;
+  top: 2vh;
+  max-width: 80%;
+  padding: 0.75rem 1rem;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 8px;
+  color: #f0f0f0;
+  line-height: 1.6;
+  z-index: 10;
+  pointer-events: none;
+  filter: drop-shadow(0 0 0.5rem rgba(0,0,0,0.5));
+  font-family: "rubik", sans-serif;
+}
+
+.note ul {
+  list-style: none;        /* remove default bullets */
+  padding: 0;
+  margin: 0;
+}
+
+.note li {
+  margin: 0.25rem 0;       /* spacing between lines */
+  display: flex;
+  align-items: center;
+}
+
+.note li::before {
+  content: "▶";            /* like Pokémon dialogue arrow */
+  margin-right: 0.5rem;
+  color: #ffcc00;           /* gold arrow */
+}
+
 </style>
 
 
