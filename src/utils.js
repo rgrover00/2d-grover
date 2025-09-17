@@ -17,8 +17,8 @@ export function displayDialogue(text, onDisplayEnd) {
     clearInterval(intervalRef);
   }, 1);
 
-  let closed = false;       // prevent double-calls
-  let armed = false;        // ignore the click that opened the menu
+  let closed = false;   // prevent double-calls
+  let armed = false;    // ignore the click that opened the menu
 
   function closeDialogue() {
     if (closed) return;
@@ -30,13 +30,13 @@ export function displayDialogue(text, onDisplayEnd) {
     clearInterval(intervalRef);
 
     // Cleanup listeners
-    closeBtn.removeEventListener("click", closeDialogue);
+    closeBtn?.removeEventListener("click", closeDialogue);
     document.removeEventListener("click", onDocClick, true);
     window.removeEventListener("keypress", onKeypress);
   }
 
   function onDocClick() {
-    if (!armed) return;     // first click after open is ignored
+    if (!armed) return; // first click after open is ignored
     closeDialogue();
   }
 
@@ -44,16 +44,25 @@ export function displayDialogue(text, onDisplayEnd) {
     if (e.code === "Enter") closeDialogue();
   }
 
-  // Click the X still works
-  closeBtn.addEventListener("click", closeDialogue);
+  // X button still works
+  closeBtn?.addEventListener("click", closeDialogue);
 
-  // Arm the global click after a tick so the opening click doesn't close it
+  // Arm after a short delay so the opening click doesn't immediately close it
   setTimeout(() => {
     armed = true;
-    // use capture to catch clicks even if something stops propagation
+    // capture = true so it works even if inner elements stopPropagation
     document.addEventListener("click", onDocClick, true);
   }, 50);
 
   // Enter key still closes
   window.addEventListener("keypress", onKeypress);
+}
+
+export function setCamScale(k) {
+  const resizeFactor = k.width() / k.height();
+  if (resizeFactor < 1) {
+    k.camScale(k.vec2(1));
+  } else {
+    k.camScale(k.vec2(1.5));
+  }
 }
