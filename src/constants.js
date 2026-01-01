@@ -8,7 +8,7 @@ export const dialogueData = {
 "On my wall, I have special awards—like shiny gold stars! They show I worked really hard to learn about computers and the internet. I even learned about computer ‘clouds’—not the fluffy ones in the sky, but the kind that help phones, TVs, and iPads talk to each other.",  
 
 "sofa-table":  
-"This is my cozy couch! I sit here with Miss Stinabean and our three silly kids—Ayla (she’s 4, just like some of you!), Bryson (he’s 2), and baby Everly. We watch cartoons, laugh, and rest together. It’s like our family charging station—where we all power up with hugs!",  
+"This is my cozy couch! I sit here with Miss Stinabean and our three silly kids—Ayla (she’s 5, just like some of you!), Bryson (he’s 3), and baby Everly (she’s 1). We watch cartoons, laugh, and rest together. It’s like our family charging station—where we all power up with hugs!",  
 
 "tv":  
 "This is our TV. It’s not just for cartoons—it teaches letters, numbers, songs, and even fun science like volcanoes! Sometimes I use it to learn new computer tricks. But most of the time, guess what? The kids pick the shows!",  
