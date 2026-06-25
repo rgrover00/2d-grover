@@ -1,87 +1,114 @@
+// Lazily cache DOM elements so we don't query the DOM on every single dialogue trigger
+const ui = {
+  initialized: false,
+  container: null,
+  box: null,
+  textEl: null,
+  closeBtn: null,
+  hintEl: null,
+};
+
+function initUI() {
+  if (ui.initialized) return;
+
+  ui.container = document.getElementById("textbox-container");
+  ui.box = document.getElementById("textbox");
+  ui.textEl = document.getElementById("dialogue");
+  ui.closeBtn = document.getElementById("close");
+
+  // Create the hint element once
+  ui.hintEl = document.createElement("div");
+  ui.hintEl.id = "continue-hint";
+  ui.hintEl.textContent = "Tap to continue…";
+  
+  // Note: Ideally, move this block to your CSS file under `#continue-hint`
+  ui.hintEl.style.cssText = `
+    font-size: 1rem;
+    opacity: 0;
+    margin-top: 0.5rem;
+    color: #444;
+    align-self: flex-end;
+    transition: opacity 0.6s ease;
+    user-select: none;
+  `;
+  
+  ui.box.appendChild(ui.hintEl);
+  ui.initialized = true;
+}
+
 export function displayDialogue(text, onDisplayEnd) {
-  const dialogueUI  = document.getElementById("textbox-container");
-  const dialogueBox = document.getElementById("textbox");
-  const dialogueEl  = document.getElementById("dialogue");
-  const closeBtn    = document.getElementById("close");
+  initUI(); // Ensures UI is ready, does nothing if already cached
 
-  // show UI
-  dialogueUI.style.display = "block";
+  // Reset UI State
+  ui.container.style.display = "block";
+  ui.hintEl.style.opacity = "0";
+  ui.textEl.textContent = ""; 
 
-  // add / reset hint element
-  let hintEl = document.getElementById("continue-hint");
-  if (!hintEl) {
-    hintEl = document.createElement("div");
-    hintEl.id = "continue-hint";
-    hintEl.style.cssText = `
-      font-size: 1rem;
-      opacity: 0;
-      margin-top: 0.5rem;
-      color: #444;
-      align-self: flex-end;
-      transition: opacity 0.6s ease;
-      user-select: none;
-    `;
-    dialogueBox.appendChild(hintEl);
-  }
-  hintEl.textContent = "Tap the box to continue…";
-  hintEl.style.opacity = "0"; // reset visibility
-
-  // typewriter effect
   let index = 0;
-  let currentText = "";
+  let isTyping = true;
+  let closed = false;
+  let armed = false;
+
+  // Typewriter effect
   const intervalRef = setInterval(() => {
     if (index < text.length) {
-      currentText += text[index];
-      dialogueEl.innerHTML = currentText;
+      ui.textEl.textContent += text[index];
       index++;
-      return;
+    } else {
+      finishTyping();
     }
+  }, 15);
+
+  // Helper to instantly finish typing
+  function finishTyping() {
     clearInterval(intervalRef);
-
-    // show hint once typing is done
-    hintEl.style.opacity = "1";
-  }, 15); // slowed down a bit so text is readable
-
-  let closed = false;
-  let armed  = false; // ignore the same click that opened it
+    isTyping = false;
+    ui.textEl.textContent = text; 
+    ui.hintEl.style.opacity = "1";
+  }
 
   function cleanup() {
-    closeBtn?.removeEventListener("click", closeDialogue);
-    dialogueBox?.removeEventListener("click", onBoxClick);
-    window.removeEventListener("keypress", onKeypress);
-    clearInterval(intervalRef);
+    ui.closeBtn?.removeEventListener("click", closeDialogue);
+    ui.box?.removeEventListener("click", onInteract);
+    window.removeEventListener("keydown", onKeydown);
   }
 
   function closeDialogue() {
     if (closed) return;
     closed = true;
-    onDisplayEnd?.();
-    dialogueUI.style.display = "none";
-    dialogueEl.innerHTML = "";
-    hintEl.style.opacity = "0";
     cleanup();
+    
+    ui.container.style.display = "none";
+    ui.textEl.textContent = "";
+    ui.hintEl.style.opacity = "0";
+    
+    onDisplayEnd?.();
   }
 
-  function onBoxClick() {
+  // Handle player input (click or keypress)
+  function onInteract() {
     if (!armed) return;
-    closeDialogue();
+    
+    if (isTyping) {
+      finishTyping(); // Skip typewriter effect
+    } else {
+      closeDialogue(); // Close if text is fully displayed
+    }
   }
 
-  function onKeypress(e) {
-    if (e.code === "Enter" || e.code === "Space") closeDialogue();
+  function onKeydown(e) {
+    if (e.code === "Enter" || e.code === "Space") onInteract();
   }
 
-  // Close with the X button as well
-  closeBtn?.addEventListener("click", closeDialogue);
+  // Event Listeners
+  ui.closeBtn?.addEventListener("click", closeDialogue);
+  window.addEventListener("keydown", onKeydown);
 
-  // Arm after a brief delay so the opening click doesn’t close it
+  // Arm after a brief delay so the initial walk-into-boundary click doesn't instantly trigger this
   setTimeout(() => {
     armed = true;
-    dialogueBox?.addEventListener("click", onBoxClick);
+    ui.box?.addEventListener("click", onInteract);
   }, 50);
-
-  // Keyboard close
-  window.addEventListener("keypress", onKeypress);
 }
 
 export function setCamScale(k) {

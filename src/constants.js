@@ -23,7 +23,7 @@ export const dialogueData = {
 "This adventure you’re playing is a game I made! I built it using something called Kaboom—it’s like a box of digital Legos. I tell the computer how to build the world, and it brings it to life. Just like you stack blocks to make a tower, I stack code to make a game!",  
 
 "library":  
-"These are my books. They’re full of computer puzzles and secrets! Some teach me how the internet works, some how to make websites, and some how to keep computers safe. I don’t read them all because I’m busy playing, but they remind me learning never stops!",  
+"These are my books. They’re full of computer puzzles and secrets! Some teach me how the internet works, some how to make websites, and some how to keep computers safe. I haven't read them all, but they remind me learning never stops!",  
 
 "exit":  
 "Look for what you can't see... Sometimes the best things are the ones you can’t see—like Wi-Fi! Almost like magic.",  
