@@ -6,6 +6,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Grover’s 2D Tech Adventure</title>
     <meta name="description" content="Explore Ronnie Grover’s interactive, Pokémon-style portfolio built with Kaboom.js." />
+    <script type="module">
+      (function () {
+        const measurementId = import.meta.env.VITE_GA_MEASUREMENT_ID ?? "";
+        if (!measurementId || measurementId.includes("YOUR_GA_MEASUREMENT_ID")) return;
+
+        window.dataLayer = window.dataLayer || [];
+        function gtag() {
+          window.dataLayer.push(arguments);
+        }
+        window.gtag = gtag;
+        gtag("js", new Date());
+        gtag("config", measurementId);
+
+        const script = document.createElement("script");
+        script.async = true;
+        script.src = `https://www.googletagmanager.com/gtag/js?id=${measurementId}`;
+        document.head.appendChild(script);
+      })();
+    </script>
   </head>
   <body>
     <!-- Global styles (inline for simplicity) -->
