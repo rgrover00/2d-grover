@@ -161,6 +161,21 @@
         }
       }
 
+      /* Floor indicator */
+      #floor-indicator {
+        position: absolute;
+        right: 3%;
+        bottom: 2vh;
+        padding: 0.4rem 0.8rem;
+        background: var(--note-bg);
+        color: var(--note-text);
+        border-radius: 8px;
+        font-size: 1rem;
+        z-index: 4;
+        pointer-events: none;
+        user-select: none;
+      }
+
       /* Canvas */
       #game {
         position: relative;
@@ -186,7 +201,7 @@
         <ul id="note-list">
           <li>Welcome to my Grover's 2D Tech Adventure portfolio! Tap or click the screen to walk.</li>
           <li>Try the computer, bookshelf, TV, and more — they tell stories!</li>
-          <li>Have fun on the adventure!</li>
+          <li>Scroll, or walk up and down the hallway — the floors never end.</li>
         </ul>
       </div>
 
@@ -199,6 +214,8 @@
           </div>
         </div>
       </div>
+
+      <div id="floor-indicator" aria-live="off"></div>
 
       <!-- Kaboom canvas -->
       <canvas id="game"></canvas>
