@@ -77,6 +77,7 @@ function setupBoundaries(boundaries, map, player) {
 
     if (boundary.name) {
       player.onCollide(boundary.name, () => {
+        if (player.isInDialogue) return;
         player.isInDialogue = true;
         displayDialogue(
           dialogueData[boundary.name],
