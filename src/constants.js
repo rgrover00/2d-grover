@@ -1,4 +1,14 @@
 export const scaleFactor = 4;
+
+// Floors stack vertically and repeat forever in both directions.
+// Every floor must be the same size and leave the stairwell (tile columns
+// 11-13) open on its top and bottom edge so any floor can sit on any other.
+// The PNG is the art; the JSON supplies the `boundaries` and `spawnpoints` layers.
+// Add a floor by dropping its PNG + Tiled JSON in /public and listing it here.
+export const floors = [
+  { name: "Home", sprite: "./map.png", map: "./map.json" },
+];
+
 export const dialogueData = {
 
 "pc":  

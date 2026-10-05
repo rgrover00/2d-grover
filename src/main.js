@@ -1,6 +1,7 @@
 import { scaleFactor, dialogueData } from "./constants";
 import { k } from "./kaboomCtx";
 import { displayDialogue, setCamScale } from "./utils";
+import { loadFloors, createChunkManager } from "./chunks";
 
 // ==========================================
 // 1. ASSET LOADING
@@ -18,16 +19,13 @@ k.loadSprite("spritesheet", "./spritesheet.png", {
   },
 });
 
-k.loadSprite("map", "./map.png");
 k.setBackground(k.Color.fromHex("#1D1D1D"));
 
 // ==========================================
 // 2. MAIN SCENE
 // ==========================================
-k.scene("main", async () => {
-  const mapData = await (await fetch("map.json")).json();
-
-  const map = k.add([k.sprite("map"), k.pos(0), k.scale(scaleFactor)]);
+k.scene("main", (loadedFloors) => {
+  const floorLabel = document.getElementById("floor-indicator");
 
   const player = k.add([
     k.sprite("spritesheet", { anim: "idle-down" }),
@@ -36,66 +34,55 @@ k.scene("main", async () => {
     k.anchor("center"),
     k.pos(),
     k.scale(scaleFactor),
+    k.z(10), // floors are spawned later, so keep the player drawn on top
     { speed: 250, direction: "down", isInDialogue: false },
     "player",
   ]);
 
-  // Parse map layers
-  for (const layer of mapData.layers) {
-    if (layer.name === "boundaries") {
-      setupBoundaries(layer.objects, map, player);
-    } else if (layer.name === "spawnpoints") {
-      setupPlayerSpawn(layer.objects, map, player);
-    }
-  }
+  const spawn = loadedFloors[0].spawn;
+  if (spawn) player.pos = k.vec2(spawn.x * scaleFactor, spawn.y * scaleFactor);
 
-  // Camera Setup
+  // Endless floors: walking up counts up, walking down counts down.
+  const chunkManager = createChunkManager(k, loadedFloors, {
+    onChange: (index, floor) => {
+      if (floorLabel) floorLabel.textContent = `Floor ${-index} · ${floor.name}`;
+    },
+  });
+  chunkManager.update(player.pos.y);
+
+  // One handler for every interactive object on every floor.
+  player.onCollide("interactable", (obj) => {
+    const text = dialogueData[obj.dialogueKey];
+    if (!text || player.isInDialogue) return;
+    player.isInDialogue = true;
+    displayDialogue(text, () => (player.isInDialogue = false));
+  });
+
+  // Camera: follow vertically, keep the floor framed horizontally.
+  const worldWidth = loadedFloors[0].width;
   setCamScale(k);
   k.onResize(() => setCamScale(k));
   k.onUpdate(() => {
-    k.camPos(player.worldPos().x, player.worldPos().y - 100);
+    chunkManager.update(player.pos.y);
+
+    const halfView = k.width() / k.camScale().x / 2;
+    const camX =
+      halfView * 2 >= worldWidth
+        ? worldWidth / 2
+        : k.clamp(player.pos.x, halfView, worldWidth - halfView);
+    k.camPos(camX, player.pos.y - 100);
   });
 
-  // Initialize Controls
   setupInputs(player);
+
+  if (import.meta.env.DEV) window.__game = { k, player, chunkManager };
 });
 
-k.go("main");
+loadFloors(k).then((loadedFloors) => k.go("main", loadedFloors));
 
 // ==========================================
-// 3. HELPER FUNCTIONS (The Refactor Magic)
+// 3. HELPER FUNCTIONS
 // ==========================================
-
-function setupBoundaries(boundaries, map, player) {
-  for (const boundary of boundaries) {
-    map.add([
-      k.area({ shape: new k.Rect(k.vec2(0), boundary.width, boundary.height) }),
-      k.body({ isStatic: true }),
-      k.pos(boundary.x, boundary.y),
-      boundary.name,
-    ]);
-
-    if (boundary.name) {
-      player.onCollide(boundary.name, () => {
-        player.isInDialogue = true;
-        displayDialogue(
-          dialogueData[boundary.name],
-          () => (player.isInDialogue = false)
-        );
-      });
-    }
-  }
-}
-
-function setupPlayerSpawn(spawnpoints, map, player) {
-  const playerSpawn = spawnpoints.find((entity) => entity.name === "player");
-  if (playerSpawn) {
-    player.pos = k.vec2(
-      (map.pos.x + playerSpawn.x) * scaleFactor,
-      (map.pos.y + playerSpawn.y) * scaleFactor
-    );
-  }
-}
 
 function setupInputs(player) {
   const stopAnims = () => {
@@ -118,17 +105,42 @@ function setupInputs(player) {
   k.onMouseRelease(stopAnims);
   k.onKeyRelease(stopAnims);
 
+  // Wheel / trackpad: scrolling walks the player up or down.
+  let scrollBudget = 0; // pixels still to walk; negative = up
+  const maxBudget = 600;
+  k.onScroll((delta) => {
+    if (player.isInDialogue) return;
+    scrollBudget = k.clamp(scrollBudget + delta.y, -maxBudget, maxBudget);
+  });
+
+  const anyDown = (...keys) => keys.some((key) => k.isKeyDown(key));
+
   // Keyboard Input (Using onUpdate for smooth continuous movement)
   k.onUpdate(() => {
-    if (player.isInDialogue) return;
+    if (player.isInDialogue) {
+      scrollBudget = 0;
+      return;
+    }
 
-    const left = k.isKeyDown("left");
-    const right = k.isKeyDown("right");
-    const up = k.isKeyDown("up");
-    const down = k.isKeyDown("down");
+    const left = anyDown("left", "a");
+    const right = anyDown("right", "d");
+    const up = anyDown("up", "w");
+    const down = anyDown("down", "s");
+    const pressed = left + right + up + down;
 
-    // Strict 4-way movement check: ensures only ONE key is pressed at a time.
-    if (left + right + up + down !== 1) return;
+    if (pressed === 0 && scrollBudget !== 0) {
+      const dir = Math.sign(scrollBudget);
+      const step = player.speed * k.dt();
+      if (dir < 0) movePlayer(player, "up", "walk-up", player.flipX, 0, -player.speed);
+      else movePlayer(player, "down", "walk-down", player.flipX, 0, player.speed);
+      scrollBudget = Math.abs(scrollBudget) <= step ? 0 : scrollBudget - dir * step;
+      if (scrollBudget === 0) stopAnims();
+      return;
+    }
+    if (pressed > 0) scrollBudget = 0;
+
+    // Strict 4-way movement check: ensures only ONE direction is pressed at a time.
+    if (pressed !== 1) return;
 
     if (right) movePlayer(player, "right", "walk-side", false, player.speed, 0);
     else if (left) movePlayer(player, "left", "walk-side", true, -player.speed, 0);
